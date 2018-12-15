@@ -1,0 +1,21 @@
+SELECT
+ information_schema.INNODB_SYS_COLUMNS.TABLE_ID as Tb_ID,
+ mysql.columns_priv.Db AS DB,
+ mysql.columns_priv.Table_name AS Tb,
+ mysql.columns_priv.Column_name AS Col,
+ mysql.columns_priv.Column_priv AS Priv,
+ mysql.columns_priv.`User` As User
+ FROM
+ information_schema.INNODB_SYS_TABLES JOIN
+ information_schema.INNODB_SYS_COLUMNS ON information_schema.INNODB_SYS_TABLES.TABLE_ID = information_schema.INNODB_SYS_COLUMNS.TABLE_ID
+ JOIN
+mysql.columns_priv ON 
+mysql.columns_priv.Table_name =  SUBSTRING_INDEX(SUBSTRING_INDEX(INNODB_SYS_TABLES.`NAME`,'#',1),'/',-1)
+and  mysql.columns_priv.Db =  SUBSTRING_INDEX(SUBSTRING_INDEX(INNODB_SYS_TABLES.`NAME`,'#',1),'/',1)  
+ WHERE
+ User='Amin'  #Username
+ GROUP BY
+ mysql.columns_priv.Db,
+ mysql.columns_priv.Table_name,
+ mysql.columns_priv.Column_name,
+ mysql.columns_priv.`User`
